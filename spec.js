@@ -4,7 +4,7 @@ describe('create attribute', function() {
     var addAttr = element(by.css("h1>a"));
     var newAttr = element(by.css("h1[class*=header_root]"));
     var newRootItem = element(by.css("form[class*='new-list-item-modal-form_root'] h1[class*='header_root']"));
-    var matchCount = element(by.css("span[class*='matches']"));
+    var matchCount = element(by.css("div[class*='pagination_pageSizeControl'] span"));
 
     beforeEach(function() {
         browser.ignoreSynchronization = true;
@@ -34,7 +34,7 @@ describe('create attribute', function() {
         browser.element(by.xpath(".//a[@href='/admin/attributes/new']")).click();
         browser.sleep(1000);
         expect(newAttr.getText()).toEqual("New Attribute");
-        browser.element(By.css("div[class*='with-field_root'] input[class*='text-input_input']")).sendKeys("!2name_for_protractor_ak_module");
+        browser.element(By.css("div[class*='with-field_root'] input[class*='text-input_input']")).sendKeys("!name_for_protractor_ak_module");
         browser.element(By.css("textarea[class*='text-input_textarea']")).sendKeys("description_for_protractor_ak_module");
         browser.element(By.xpath(".//span[text()='Please select...']")).click();
         browser.element(By.xpath(".//div[text()='List']")).click();
@@ -59,11 +59,12 @@ describe('create attribute', function() {
     it('should create and remove attribute', function() {
         browser.element(By.xpath(".//button[text()='Create']")).click();
         browser.sleep(3000);
-        expect(matchCount.getText()).toEqual("7 Matches");
-        browser.element(By.css("i[data-qa-id='delete']")).click();
-        browser.sleep(1000);
+        expect(matchCount.getText()).toEqual("10");
+        browser.element(By.css("div[class*='pagination_pageSizeControl']>div")).click();
+        browser.element(By.xpath(".//div[contains(@class, 'pagination_pageSizeControl')]//div[text()='20']")).click();
+        browser.findElement(By.xpath(".//td[text()='!name_for_protractor_ak_module']/..//i[@data-qa-id='delete']")).click();
         browser.findElement(By.xpath(".//button[text()='Yes']")).click();
         browser.sleep(3000);
-        expect(matchCount.getText()).toEqual("6 Matches");
+        expect(matchCount.getText()).toEqual("20");
     });
 });
